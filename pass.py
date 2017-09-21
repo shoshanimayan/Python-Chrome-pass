@@ -19,31 +19,47 @@ def valPath(): #gets the file path for the chrome information
 
 def recover():#complete function that uses all the other parts to recover passwords and return thm to the user as a json and txt file
     parser = argparse.ArgumentParser(description="Retrieve Google Chrome Passwords")
-    parser.add_argument("-o", "--output", choices=['json'],help="Output passwords to JSON  format.")
-    parser.add_argument("-d", "--dump", help="Dump passwords to stdout. ", action="store_true")
+    parser.add_argument("-p", "--print", help="Dump passwords to stdout. ", action="store_true")
+    parser.add_argument("-o", "--out", choices=['json','txt'],help="Output passwords to JSON or txt format.")
+    parser.add_argument("-s", "--search", help="returns info of searched object, input something like a site name")
+
+
 
     args = parser.parse_args()
-    
-    if args.dump:
+
+    if args.print:
         for line in SQLextractor():
             print(line)
             print()
-        
-    if args.output=='json':
+
+    elif args.out=='json':
         jsonExtract(SQLextractor())
-    return   
-    
-#print(valPath())
+    elif args.search:
+        items = search(SQLextractor(),str(args.search))
+        if items!=[]:
+            for i in items:
+                print(i)
+                print()
+        else:
+            print('nothing found matching that search, sorry')
+    return
 
 def nameget():
-    name=input('name you want to give the file')
-    if
+    name=input('name you want to give the file: ')
+    return name
 
+def search(info,name):
+    found =[]
+    for i in info:
+        if(name in i['url']):
+            found.append(i)
+    return found
+    
 
 def jsonExtract( info): # extracts json data to text
     try:
         name =nameget()
-        
+
         with open(name+'.json', 'w') as json_file:
             json.dump({'password_items': info}, json_file)
         print('success')
@@ -65,7 +81,7 @@ def SQLextractor():
                 if os.name =='nt':
                     password = win32crypt.CryptUnprotectData(i[2], None, None, None, 0)[1]
                     if password:
-                        info.append({'url':i[0],'user':i[1],'password':str(password)})    
+                        info.append({'url':i[0],'user':i[1],'password':str(password)})
     except sqlite3.operationalError as err:
         print(str(e))
     def alphabet(ele):

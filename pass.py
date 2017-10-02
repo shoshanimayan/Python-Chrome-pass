@@ -29,11 +29,13 @@ def recover():#complete function that uses all the other parts to recover passwo
 
     if args.print:
         for line in SQLextractor():
+            print('========================================================')
             print(line)
             print()
-
     elif args.out=='json':
         jsonExtract(SQLextractor())
+    elif args.out=='txt':
+        csvExtract(SQLextractor())
     elif args.search:
         items = search(SQLextractor(),str(args.search))
         if items!=[]:
@@ -59,12 +61,23 @@ def search(info,name):
 def jsonExtract( info): # extracts json data to text
     try:
         name =nameget()
-
         with open(name+'.json', 'w') as json_file:
             json.dump({'password_items': info}, json_file)
-        print('success')
+        print('success, info wriiten to '+name)
     except EnvironmentError:
         print("could not write the data")
+
+def csvExtract(info):
+    try:
+        name =nameget()
+        with open(name, 'wb') as csv_file:
+            csv_file.write('origin_url,username,password \n'.encode('utf-8'))
+            for data in info:
+                csv_file.write(('%s, %s, %s \n' % (data['url'], data[
+                    'user'], data['password'])).encode('utf-8'))
+        print('success, info wriiten to '+name)
+    except EnvironmentError:
+        print('could not write data')
 
 def SQLextractor():
     info=[]

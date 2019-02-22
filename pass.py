@@ -17,7 +17,7 @@ def valPath(): #gets the file path for the chrome information
     print('found path on windows!')
     return path
 
-def recover():#complete function that uses all the other parts to recover passwords and return thm to the user as a json and txt file
+def recover():#main function that uses all the other parts to recover passwords, allows user to search by name, print out info, return info to the user as a json or txt file
     parser = argparse.ArgumentParser(description="Retrieve Google Chrome Passwords")
     parser.add_argument("-p", "--print", help="Dump passwords to stdout. ", action="store_true")
     parser.add_argument("-o", "--out", choices=['json','txt'],help="Output passwords to JSON or txt format.")
@@ -46,10 +46,12 @@ def recover():#complete function that uses all the other parts to recover passwo
             print('nothing found matching that search, sorry')
     return
 
+# gets name for file created
 def nameget():
     name=input('name you want to give the file: ')
     return name
 
+# get search results
 def search(info,name):
     found =[]
     for i in info:
@@ -58,7 +60,7 @@ def search(info,name):
     return found
     
 
-def jsonExtract( info): # extracts json data to text
+def jsonExtract( info): # extracts json data
     try:
         name =nameget()
         with open(name+'.json', 'w') as json_file:
@@ -66,7 +68,7 @@ def jsonExtract( info): # extracts json data to text
         print('success, info wriiten to '+name)
     except EnvironmentError:
         print("could not write the data")
-
+#extracts as csv
 def csvExtract(info):
     try:
         name =nameget()
@@ -79,6 +81,7 @@ def csvExtract(info):
     except EnvironmentError:
         print('could not write data')
 
+# where the actaul parsing of information from the database takes place
 def SQLextractor():
     info=[]
     path=valPath()

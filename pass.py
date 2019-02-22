@@ -7,7 +7,7 @@ import sqlite3
 import win32crypt
 
 #python program meant to show how to extract passwords from browser as well as show use of databases built stored in the browsers
-
+# cannot run if chrome is currently open
 def valPath(): #gets the file path for the chrome information
     if os.name =="nt": # this is a windows system
         path= (os.getenv("localappdata")+'\\Google\\Chrome\\User Data\\Default\\')
